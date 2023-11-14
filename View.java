@@ -1,48 +1,41 @@
 import javax.swing.*;
 import java.awt.event.ActionListener;
-
+/**
+ * View class is in-charge of the GUI and user interactions for the program. Displays a JFrame and sends information
+ * to Controller class regarding button presses and user input.
+ * @author Jose Merida
+ * @version 1.0
+ * @since 13-11-2023
+ */
 public class View extends JFrame {
-    //Labels
     private JLabel titleLabel;
     private JLabel transportLabel;
     private JLabel homeLabel;
     private JLabel foodLabel;
     private JLabel monthlyGasLabel;
     private JLabel yearlyFlightsLabel;
-    private JLabel weeklyFoodLabel;
-
-    //buttons
     private JButton registerButton;
     private JButton loginButton;
     private JButton calculateButton;
-
-    //Transport Entries
     private JTextField carMoneyTextField;
     private JTextField bikeMoneyTextField;
-    private JTextField busDistanceTextField;
     private JTextField flightHoursTextField;
-
     private JLabel homeConsumptionLabel;
     private JLabel housematesAndRecycleLabel;
-
-    //Home entries
     private JTextField electricityConsumptionField;
     private JTextField gasConsumptionField;
     private JTextField houseMatesField;
     private JCheckBox doesRecycleBox;
-
     private JLabel portionInfoLabel;
     private JLabel dairyPortionLabel;
-
-    //Food entries
     private JTextField meatPortionsField;
     private JTextField chickenPortionsField;
     private JTextField porkPortionsField;
     private JTextField fishPortionsField;
     private JTextField dairyPortionsField;
-
-    //Buttons
-
+    /**
+     * Constructor for View, creates the JFrame and its components.
+     */
     public View(){
         //Sets title, size and closing operation
         this.setTitle("Calculadora de Huella de Carbono");
@@ -60,44 +53,32 @@ public class View extends JFrame {
         homeLabel = new JLabel("Casa");
         foodLabel = new JLabel("Comida Semanal");
         doesRecycleBox = new JCheckBox("Reciclo el Plastico");
-
-        //Transport entries
         carMoneyTextField = new JTextField("Cantidad entera en Q (Carro)");
         bikeMoneyTextField = new JTextField("Cantidad entera en Q (Moto)");
         flightHoursTextField = new JTextField("Cantidad entera en Horas");
-
-        //Home entries
         electricityConsumptionField = new JTextField("Consumo de Luz en kWH");
         gasConsumptionField = new JTextField("Consumo de Gas en LBs");
         houseMatesField = new JTextField("Numero de Personas");
-
         homeConsumptionLabel = new JLabel("Consumos Mensuales");
         housematesAndRecycleLabel = new JLabel("Residentes y Reciclaje");
         dairyPortionLabel = new JLabel("1 vaso de leche / 25g de queso");
-        //Food entries
         meatPortionsField = new JTextField("Porciones de Carne");
         chickenPortionsField = new JTextField("Porciones de Pollo");
         porkPortionsField = new JTextField("Porciones de Cerdo");
         fishPortionsField = new JTextField("Porciones de Pescado");
         dairyPortionsField = new JTextField("Porciones de Lacteos");
-
-        //Buttons
-
         loginButton = new JButton("Ingresar");
         registerButton = new JButton("Registrate");
         calculateButton = new JButton("Calcular");
         loginButton.setHorizontalAlignment(0);
         registerButton.setHorizontalAlignment(0);
         calculateButton.setHorizontalAlignment(0);
-
         portionInfoLabel = new JLabel("1 porcion es la palma de la mano");
-
         meatPortionsField.setHorizontalAlignment(0);
         chickenPortionsField.setHorizontalAlignment(0);
         porkPortionsField.setHorizontalAlignment(0);
         fishPortionsField.setHorizontalAlignment(0);
         dairyPortionsField.setHorizontalAlignment(0);
-
         carMoneyTextField.setHorizontalAlignment(0);
         bikeMoneyTextField.setHorizontalAlignment(0);
         flightHoursTextField.setHorizontalAlignment(0);
@@ -105,7 +86,6 @@ public class View extends JFrame {
         electricityConsumptionField.setHorizontalAlignment(0);
         gasConsumptionField.setHorizontalAlignment(0);
         houseMatesField.setHorizontalAlignment(0);
-
 
         //Adding components to the GUI
         add(titleLabel);
@@ -147,9 +127,6 @@ public class View extends JFrame {
         chickenPortionsField.setBounds(35,280, 180, 20);
         porkPortionsField.setBounds(35, 310, 180, 20);
         fishPortionsField.setBounds(35, 340, 180, 20);
-
-
-
         dairyPortionLabel.setBounds(37,360, 180, 20);
         dairyPortionsField.setBounds(35, 380, 180, 20);
         homeLabel.setBounds(350, 35, 70, 25);
@@ -164,61 +141,132 @@ public class View extends JFrame {
         homeConsumptionLabel.setBounds(300, 60, 180, 20);
         housematesAndRecycleLabel.setBounds(300, 123, 140, 25);
     }
+    /**
+     * Creates a new JOptionPane displaying specific text
+     * @param text The text to be displayed in the JOptionPane
+     */
     public void popUp(String text){
         JOptionPane.showMessageDialog(this, text);
     }
-
+    /**
+     * Adds action listener for buttons in the GUI
+     * @param listener the listener
+     */
     public void addActionListener(ActionListener listener){
         registerButton.addActionListener(listener);
         loginButton.addActionListener(listener);
         calculateButton.addActionListener(listener);
         doesRecycleBox.addActionListener(listener);
     }
+    /**
+     * Getter method for registerButton
+     * @return JButton registerButton
+     */
     public JButton getRegisterButton(){
         return registerButton;
     }
+    /**
+     * Getter method for loginButton
+     * @return JButton loginButton
+     */
     public JButton getLoginButton(){
         return loginButton;
     }
+    /**
+     * Getter method for calculateButton
+     * @return JButton calculateButton
+     */
     public JButton getCalculateButton(){
         return calculateButton;
     }
+    /**
+     * Getter method for the text inside carMoneyTextField
+     * @return Integer entered into carMoneyTextField
+     */
     public int getCarMoney(){
         return Integer.parseInt(carMoneyTextField.getText());
     }
+    /**
+     * Getter method for the text inside bikeMoneyTextField
+     * @return Integer entered into bikeMoneyTextField
+     */
     public int getBikeMoney(){
         return Integer.parseInt(bikeMoneyTextField.getText());
     }
+    /**
+     * Getter method for the text inside flightHoursTextField
+     * @return Integer entered into flightHoursTextField
+     */
     public int getFlightHours(){
         return Integer.parseInt(flightHoursTextField.getText());
     }
+    /**
+     * Getter method for the text inside meatPortionsField
+     * @return Integer entered into meatPortionsField
+     */
     public int getMeatPortions(){
         return Integer.parseInt(meatPortionsField.getText());
     }
+    /**
+     * Getter method for the text inside chickenPortionsField
+     * @return Integer entered into chickenPortionsField
+     */
     public int getChickenPortions(){
         return Integer.parseInt(chickenPortionsField.getText());
     }
+    /**
+     * Getter method for the text inside porkPortionsField
+     * @return Integer entered into porkPortionsField
+     */
     public int getPorkPortions(){
         return Integer.parseInt(porkPortionsField.getText());
     }
+    /**
+     * Getter method for the text inside fishPortionsField
+     * @return Integer entered into fishPortionsField
+     */
     public int getFishPortions(){
         return Integer.parseInt(fishPortionsField.getText());
     }
+    /**
+     * Getter method for the text inside dairyPortionsField
+     * @return Integer entered into dairyPortionsField
+     */
     public int getDairyPortions(){
         return Integer.parseInt(dairyPortionsField.getText());
     }
+    /**
+     * Getter method for the text inside electricityConsumptionField
+     * @return Integer entered into electricityConsumptionField
+     */
     public int getElectricity(){
         return Integer.parseInt(electricityConsumptionField.getText());
     }
+    /**
+     * Getter method for whether the doesRecycleBox is selected or not
+     * @return True if the box is selected, False if the box isn't selected
+     */
     public boolean doesRecycle(){
         return doesRecycleBox.isSelected();
     }
+    /**
+     * Getter method for the text inside gasConsumptionField
+     * @return Integer entered into gasConsumptionField
+     */
     public int getGas(){
         return Integer.parseInt(gasConsumptionField.getText());
     }
+    /**
+     * Getter method for the text inside houseMatesField
+     * @return Integer entered into houseMatesField
+     */
     public int getHouseMates(){
         return Integer.parseInt(houseMatesField.getText());
     }
+    /**
+     * Gets signup information from user via JOptionPane
+     * @return String "username,password"
+     */
     public String getSignup(){
         JTextField userField = new JTextField();
         JTextField passwordField = new JTextField();
@@ -226,6 +274,10 @@ public class View extends JFrame {
         JOptionPane.showConfirmDialog(null, fields, "Ingrese usuario y contrasena", JOptionPane.OK_CANCEL_OPTION);
         return userField.getText() + "," + passwordField.getText();
     }
+    /**
+     * Gets login information from user via JOptionPane
+     * @return String "username,password"
+     */
     public String getLogin(){
         JTextField userField = new JTextField();
         JTextField passwordField = new JTextField();

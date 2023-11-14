@@ -2,16 +2,42 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
+/**
+ * Controller Class for carbon footprint calculator, used to read / write data from CSV file and store it inside
+ * an ArrayList while the program is running. Is in charge of calculations and data keeping of the program.
+ * @author Jose Merida, Kenzo Ochoa, Sophié Cleaves
+ * @version 1.0
+ * @since 13-11-2023
+ */
 public class Model {
     private ArrayList<User> userList;
-    private String currentUserName;
+    private RegisteredUser loginUser;
+
+    /**
+     * Constructor for Model class, creates new Model and empty ArrayList of users.
+     */
     public Model(){
         userList = new ArrayList<User>();
     }
-
-    public void setCurrentUserName(String currentUserName) {
-        this.currentUserName = currentUserName;
+    /**
+     * Setter method for loginUser, used whenever a User logs in
+     * @param currentUserName username of the user to be set as loginUser
+     */
+    public void setCurrentUser(String currentUserName) {
+        /**
+         * Gets an ArrayList of all RegisteredUser and checks whether the usernames match, if they do it sets loginUser
+         * to the User.
+         */
+        ArrayList<RegisteredUser> registeredUserList = getUserList("RegisteredUser");
+        for (RegisteredUser currentUser : registeredUserList){
+            if (currentUser.getUsername().equals(currentUserName)){
+                loginUser = currentUser;
+            }
+        }
     }
+    /**
+     * Method used to read data from CSV file into ArrayList userList
+     */
     public void readCSV(){
         String line;
         try (
@@ -66,12 +92,16 @@ public class Model {
             e.printStackTrace();
         }
     }
+    /**
+     * Method used to write data from ArrayList userList into CSV file
+     */
     public void writeCSV(){
+        //Separates userList into two separate lists for UnregisteredUser and RegisteredUser
             ArrayList<RegisteredUser> registeredUserList = getUserList("RegisteredUser");
             ArrayList<UnregisteredUser> unregisteredUserList = getUserList("UnregisteredUser");
             try (BufferedWriter bw = new BufferedWriter(new FileWriter("data.csv"))) {
+                //Writes data for every RegisteredUser
                 for (RegisteredUser currentRegisteredUser : registeredUserList) {
-                    //Gets Transport, Food and Home objets from currentRegisteredUser
                     String transportString = currentRegisteredUser.getTransportEmission().getString();
                     String foodString = currentRegisteredUser.getFoodEmission().getString();
                     String homeString = currentRegisteredUser.getHomeEmission().getString();
@@ -80,6 +110,7 @@ public class Model {
                     bw.newLine();
                 }
                 for (UnregisteredUser currentUnregistereduser: unregisteredUserList){
+                    //Writes data for every UnregisteredUser
                     String transportString = currentUnregistereduser.getTransportEmission().getString();
                     String foodString = currentUnregistereduser.getFoodEmission().getString();
                     String homeString = currentUnregistereduser.getHomeEmission().getString();
@@ -91,6 +122,11 @@ public class Model {
                 e.printStackTrace();
             }
         }
+    /**
+     * Gets an ArrayList of RegisteredUser or UnregisteredUser based on userType specified
+     * @param userType "RegisteredUser" or "UnregisteredUser", the class the ArrayList will contain
+     * @return ArrayList of objects of the specified class
+     */
     public ArrayList getUserList(String userType) {
         ArrayList<User> tempList = new ArrayList<>();
         for (User currentUser : userList){
@@ -100,6 +136,11 @@ public class Model {
         }
         return tempList;
     }
+
+    /**
+     * Calculates the average carbon footprint for all users (registered or unregistered) that have used the program
+     * @return Average footprint in KGs of CO2 / month
+     */
     public double getAverageFootprint(){
         double sum = 0;
         for (User currentUser : userList){
@@ -107,6 +148,10 @@ public class Model {
         }
         return sum / userList.size();
     }
+    /**
+     * Calculates the average Transport carbon footprint for all users that have used the program
+     * @return the average transport related carbon footprint in KGs of CO2 / month
+     */
     public double getAverageTransportPrint(){
         double sum = 0;
         for (User currentUser : userList){
@@ -114,6 +159,10 @@ public class Model {
         }
         return sum / userList.size();
     }
+    /**
+     * Calculates the average Food carbon footprint for all users that have used the program
+     * @return the average food related carbon footprint in KGs of CO2 / month
+     */
     public double getAverageFoodPrint(){
         double sum = 0;
         for (User currentUser : userList){
@@ -121,6 +170,10 @@ public class Model {
         }
         return sum / userList.size();
     }
+    /**
+     * Calculates the average Home carbon footprint for all users that have used the program
+     * @return the average home related carbon footprint in KGs of CO2 / month
+     */
     public double getAverageHomePrint(){
         double sum = 0;
         for (User currentUser : userList){
@@ -128,25 +181,29 @@ public class Model {
         }
         return sum / userList.size();
     }
-    public void addUser(Transport transportEmission, Food foodEmission, Home homeEmission){
-        userList.add(new UnregisteredUser(transportEmission, foodEmission, homeEmission));
+    /**
+     * Getter method for loginUser (the user that is currently logged in)
+     * @return loginUser
+     */
+    public RegisteredUser getLoginUser(){
+        return loginUser;
     }
-    public void addUser (Transport transportEmission, Food foodEmission, Home homeEmission, String username, String password){
-        userList.add(new RegisteredUser(transportEmission, foodEmission, homeEmission, username, password));
-    }
-    public String getCurrentUserName(){
-        return currentUserName;
-    }
+    /**
+     * Updates the current loginUser's Transport, Food and Home attributes
+     * @param transportEmission Transport to replace loginUser's current Transport
+     * @param foodEmission Food to replace loginUser's current Food
+     * @param homeEmission Home to replace loginUser's current Home
+     */
     public void updateUser (Transport transportEmission, Food foodEmission, Home homeEmission){
-        ArrayList<RegisteredUser> tempList = getUserList("RegisteredUser");
-        for (RegisteredUser currentUser : tempList){
-            if (currentUser.getUsername().equals(currentUserName)){
-                currentUser.setTransport(transportEmission);
-                currentUser.setFood(foodEmission);
-                currentUser.setHome(homeEmission);
-            }
-        }
+        loginUser.setFood(foodEmission);
+        loginUser.setHome(homeEmission);
+        loginUser.setTransport(transportEmission);
     }
+    /**
+     * Checks whether a username exists in the database or not
+     * @param user the username checked for existence
+     * @return true if the username is unique, false if it already exists
+     */
     public boolean validateSignup(String user){
         ArrayList<RegisteredUser> registeredUserList = getUserList("RegisteredUser");
         for (RegisteredUser currentUser : registeredUserList){
@@ -156,9 +213,19 @@ public class Model {
         }
         return true;
     }
+    /**
+     * Adds User to userList
+     * @param user User to be added
+     */
     public void addUser(User user){
         userList.add(user);
     }
+    /**
+     * Checks if the username and password match the login credentials for an existing user
+     * @param user username credential
+     * @param password password credential
+     * @return true if the login is valid, false if the login isn't valid
+     */
     public boolean validateLogin(String user, String password){
         ArrayList<RegisteredUser> registeredUserList = getUserList("RegisteredUser");
         for (RegisteredUser currentUser : registeredUserList){
@@ -169,14 +236,5 @@ public class Model {
         }
         }
         return false;
-    }
-    public RegisteredUser getCurrentUser(){
-        ArrayList<RegisteredUser> registeredUserList = getUserList("RegisteredUser");
-        for (RegisteredUser currentUser : registeredUserList){
-            if (currentUser.getUsername().equals(currentUserName)){
-                return currentUser;
-            }
-        }
-        return null;
     }
 }
